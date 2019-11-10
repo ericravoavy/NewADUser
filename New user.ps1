@@ -1,7 +1,14 @@
 ﻿#Creating PSobject model with information properties of a new employee.
 #These informations should be provided by HR departement
+
 #Import all the command module fo managing active directory
-Import-Module ActiveDirectory
+#ConnectAD.ps1
+#Connect to your Domain Controller(DC)
+#Change the value after the -ComputerName to your know DC
+
+#$session = New-PSSession -ComputerName "VWSERVDCSH" -Credential (Get-Credential)
+#Invoke-Command $session -Scriptblock { Import-Module ActiveDirectory }
+#Import-PSSession -Session $session -module ActiveDirectory
 
 #describe the properties of Userclass object
 $Userclass = New-Object psobject -Property @{
@@ -57,7 +64,6 @@ function Userclass {
 echo "la class userclass définissant un utilisateur de l'AD est défini"
 
 
-
 #Initiate an user from class Userclass
 $New_User = Userclass -first_name Jean -last_name Alvin -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
 
@@ -72,27 +78,20 @@ echo $New_User
 
 #connexion to the Active directory and create users
 
+New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+
 #verifier qu'il n'existe pas de user déjà crée avec le $New_
 
-if (@(Get-ADUser -Filter { SamAccountName -eq $New_User.login }).Count -eq 0) {
-    Write-Warning -Message "User does not exist"
-    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-    }
-else
-    {
-    Write-Warning -Message "User exist"
-    }
-
-
-#try {
-#    $TestUser = Get-ADUser -Filter { SamAccountName -eq $New_User.login } -ErrorAction Stop
-#    write-warning -Message "User exist."
-#}
-#catch {
-#    write-warning -Message "User does not exist."
+#if (@(Get-ADUser -Filter { SamAccountName -eq $New_User.login }).Count -eq 0) {
+#    Write-Warning -Message "User does not exist"
 #    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-#}
- 
+#    }
+#else#
+#    {
+#    Write-Warning -Message "User exist"
+#    }
+
+
 #-SearchBase $New_User.OUPath
 
 #if($TestUser.SamAccountName -eq $null){
@@ -106,3 +105,4 @@ else
 #}
 
 
+#verifier qu'il n'existe pas de user déjà crée avec le $New_
