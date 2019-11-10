@@ -65,15 +65,11 @@ function Userclass {
 
 echo "la class userclass définissant un utilisateur de l'AD est défini"
 
-
-
 #connexion to the Active directory and create users
 
 #Initiate an user from class Userclass
 $New_User = Userclass -first_name Jean -last_name Alvin -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 #display the new User created
 echo $New_User
 
@@ -82,24 +78,11 @@ echo $New_User
 #$Password = ConvertTo-SecureString "Slash7739" -AsPlainText -Force
 #$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
 #Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
-=======
-$New_User = Userclass -first_name Jean -last_name Dupont -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
-
->>>>>>> dev-userclass
-=======
-$New_User = Userclass -first_name Jean -last_name Dupont -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
-
->>>>>>> dev-userclass
 
 #verifier qu'il n'existe pas de user déjà crée avec le $New_
 
 #Creating the user to the Active Directory
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-=======
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
->>>>>>> dev-userclass
-=======
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
->>>>>>> dev-userclass
+
+
