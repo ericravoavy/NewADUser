@@ -76,9 +76,9 @@ echo $New_User
 #$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
 #Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
 
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-
 #connexion to the Active directory and create users
+
+New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
 
 #verifier qu'il n'existe pas de user déjà crée avec le $New_
 
@@ -112,3 +112,6 @@ New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $
 #{
 #    echo "User existe déjà"
 #}
+
+
+#verifier qu'il n'existe pas de user déjà crée avec le $New_
