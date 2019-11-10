@@ -1,7 +1,5 @@
-﻿#Creating PSobject model with information properties of a new user.
+﻿#Creating PSobject model with information properties of a new employee.
 #These informations should be provided by HR departement
-#Import all the command module fo managing active directory
-#Import-Module ActiveDirectory
 
 #Import all the command module fo managing active directory
 #ConnectAD.ps1
@@ -12,7 +10,7 @@
 #Invoke-Command $session -Scriptblock { Import-Module ActiveDirectory }
 #Import-PSSession -Session $session -module ActiveDirectory
 
-#describe the properties of User object
+#describe the properties of Userclass object
 $Userclass = New-Object psobject -Property @{
     first_name = $null
     last_name = $null
@@ -25,7 +23,7 @@ $Userclass = New-Object psobject -Property @{
     Enable = $null
 }
 
-#Contructor of object new user
+#Contructor of userclass class
 #define the mandatory information parameters of the object
 function Userclass {
     param(
@@ -66,14 +64,9 @@ function Userclass {
 echo "la class userclass définissant un utilisateur de l'AD est défini"
 
 
-
-#connexion to the Active directory and create users
-
 #Initiate an user from class Userclass
 $New_User = Userclass -first_name Jean -last_name Alvin -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 #display the new User created
 echo $New_User
 
@@ -82,24 +75,40 @@ echo $New_User
 #$Password = ConvertTo-SecureString "Slash7739" -AsPlainText -Force
 #$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
 #Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
-=======
-$New_User = Userclass -first_name Jean -last_name Dupont -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
 
->>>>>>> dev-userclass
-=======
-$New_User = Userclass -first_name Jean -last_name Dupont -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
+New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
 
->>>>>>> dev-userclass
+#connexion to the Active directory and create users
 
 #verifier qu'il n'existe pas de user déjà crée avec le $New_
 
-#Creating the user to the Active Directory
-<<<<<<< HEAD
-<<<<<<< HEAD
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-=======
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
->>>>>>> dev-userclass
-=======
-New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
->>>>>>> dev-userclass
+#if (@(Get-ADUser -Filter { SamAccountName -eq $New_User.login }).Count -eq 0) {
+#    Write-Warning -Message "User does not exist"
+#    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+#    }
+#else#
+#    {
+#    Write-Warning -Message "User exist"
+#    }
+
+
+#try {
+#    $TestUser = Get-ADUser -Filter { SamAccountName -eq $New_User.login } -ErrorAction Stop
+#    write-warning -Message "User exist."
+#}
+#catch {
+#    write-warning -Message "User does not exist."
+#    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+#}
+ 
+#-SearchBase $New_User.OUPath
+
+#if($TestUser.SamAccountName -eq $null){
+#    echo "User n'existe pas"
+    #Creating the user to the Active Directory
+    #New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+#}
+#Else
+#{
+#    echo "User existe déjà"
+#}
