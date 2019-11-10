@@ -92,15 +92,6 @@ New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $
 #    }
 
 
-#try {
-#    $TestUser = Get-ADUser -Filter { SamAccountName -eq $New_User.login } -ErrorAction Stop
-#    write-warning -Message "User exist."
-#}
-#catch {
-#    write-warning -Message "User does not exist."
-#    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-#}
- 
 #-SearchBase $New_User.OUPath
 
 #if($TestUser.SamAccountName -eq $null){
