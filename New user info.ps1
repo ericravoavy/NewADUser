@@ -1,8 +1,16 @@
 ﻿#Creating PSobject model with information properties of a new user.
 #These informations should be provided by HR departement
+#Import all the command module fo managing active directory
+#Import-Module ActiveDirectory
 
 #Import all the command module fo managing active directory
-Import-Module ActiveDirectory
+#ConnectAD.ps1
+#Connect to your Domain Controller(DC)
+#Change the value after the -ComputerName to your know DC
+
+#$session = New-PSSession -ComputerName "VWSERVDCSH" -Credential (Get-Credential)
+#Invoke-Command $session -Scriptblock { Import-Module ActiveDirectory }
+#Import-PSSession -Session $session -module ActiveDirectory
 
 #describe the properties of User object
 $Userclass = New-Object psobject -Property @{
@@ -49,17 +57,17 @@ function Userclass {
 
 echo "la class userclass définissant un utilisateur de l'AD est défini"
 
+
+
 #connexion to the Active directory and create users
 
 #connecting to the active directoru with the service account
 Enter-PSSession -ComputerName VWSERVDCSH.silver-holdings.lan -Credential Silver-Holdings\svc_create_user
 
-$New_Joiner = Userclass -first_name Alice -last_name Dupont -login al.du -Tel_number 0000 -mail_address art@tret.com -departement CA -function VP
+$New_User = Userclass -first_name Jean -last_name Dupont -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
 
-#Import all the command module fo managing active directory
-Import-Module ActiveDirectory
 
 #verifier qu'il n'existe pas de user déjà crée avec le $New_
 
 #Creating the user to the Active Directory
-New-ADUser -Name $New_Joiner.first_name -GivenName $New_Joiner.first_name -Surname $New_Joiner.lastname  -Department $New_Joiner.departement -Description $New_Joiner.function -OfficePhone $new_joiner.Tel_number -SamAccountName $New_Joiner.login -EmailAddress $New_Joiner.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -path "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
