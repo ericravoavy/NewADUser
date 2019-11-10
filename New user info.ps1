@@ -13,6 +13,8 @@ $Userclass = New-Object psobject -Property @{
     mail_address = $null
     departement = $null
     function = $null
+    OUPath = $null
+    Enable = $null
 }
 
 #Contructor of object new user
@@ -34,7 +36,11 @@ function Userclass {
         [String]$departement,
         [Parameter(Mandatory=$true)]
         #[ValidateSet('IT','Accountant','VP','AVP')]
-        [string]$function
+        [string]$function,
+        [Parameter(Mandatory=$true)]
+        [string]$OUPath,
+        [Parameter(Mandatory=$true)]
+        [string]$Enable
     )
     $Userclass = $Userclass.psobject.copy()
     $Userclass.first_name = $first_name
@@ -44,6 +50,8 @@ function Userclass {
     $Userclass.mail_address = $mail_address
     $Userclass.departement = $departement
     $Userclass.function = $Function
+    $userclass.OUPath = $OUPath
+    $userclass.Enable = $Enable
     $Userclass
 }
 
@@ -51,10 +59,20 @@ echo "la class userclass définissant un utilisateur de l'AD est défini"
 
 #connexion to the Active directory and create users
 
+
 #Initiate an user from class Userclass
-$New_User = Userclass -first_name Jean -last_name Alvin -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP
+$New_User = Userclass -first_name Jean -last_name Alvin -login je.du -Tel_number 0000 -mail_address art@mail.com -departement CA -function VP -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
 
 #display the new User created
 echo $New_User
 
+#connecting to the active directory with the service account
 
+#$Password = ConvertTo-SecureString "Slash7739" -AsPlainText -Force
+#$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
+#Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
+
+#verifier qu'il n'existe pas de user déjà crée avec le $New_
+
+#Creating the user to the Active Directory
+New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
