@@ -72,7 +72,7 @@ echo $New_User
 
 #connecting to the active directory with the service account
 
-#$Password = ConvertTo-SecureString "Slash7739" -AsPlainText -Force
+#$Password = ConvertTo-SecureString "Password" -AsPlainText -Force
 #$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
 #Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
 
