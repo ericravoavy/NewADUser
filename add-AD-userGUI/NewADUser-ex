@@ -1,0 +1,136 @@
+from tkinter import *
+import tkinter.messagebox
+import tkinter
+ 
+def effacer():
+    Champ.delete(0,END)
+    Champ2.delete(0,END)
+    Champ3.delete(0,END)
+    Champ4.delete(0,END)
+    Champ5.delete(0,END)
+    Champ6.delete(0,END)
+    Champ7.delete(0,END)
+    C1.deselect()
+    C2.deselect()
+    C3.deselect()
+    C4.deselect()
+    C5.deselect()
+    C6.deselect()
+    homme.deselect()
+    femme.deselect()
+ 
+ 
+     
+     
+fenetre= Tk()
+fichier= open("User.txt","w")
+ 
+Label1 = Label(fenetre, text = 'Nom : ')
+Label1.grid(column=0, row=0, sticky='w')
+Nom= StringVar()
+Champ = Entry(fenetre, textvariable= Nom, width=31)
+Champ.focus_set()
+Champ.grid(column=1, row=0, sticky='sw', columnspan=2, padx=10)
+ 
+ 
+ 
+Label2 = Label(fenetre, text = 'Prénom : ',)
+Label2.grid(column=0, row=1,sticky='w',pady=2)
+Prénom= StringVar()
+Champ2 = Entry(fenetre, textvariable= Prénom, width=31)
+Champ2.focus_set()
+Champ2.grid(column=1, row=1,columnspan=2)
+ 
+ 
+ 
+Label3 = Label(fenetre, text = 'Age : ')
+Label3.grid(column=0, row=2, sticky='w',pady=2)
+Age= StringVar()
+Champ3 = Entry(fenetre, textvariable= Age,width=31)
+Champ3.focus_set()
+Champ3.grid(column=1, row=2,columnspan=2)
+ 
+ 
+Label4 = Label(fenetre, text = 'Adresse mail : ')
+Label4.grid(column=0, row=3,sticky='w',pady=2)
+Adresse= StringVar()
+Champ4 = Entry(fenetre, textvariable= Adresse,width=31)
+Champ4.focus_set()
+Champ4.grid(column=1, row=3,columnspan=2)
+ 
+ 
+Label5 = Label(fenetre, text = 'Mot de passe : ')
+Label5.grid(column=0, row=4,sticky='w', pady=2)
+MDP= StringVar()
+Champ5 = Entry(fenetre, textvariable= MDP,width=31)
+Champ5.focus_set()
+Champ5.grid(column=1, row=4,columnspan=2)
+ 
+ 
+Label6 = Label(fenetre, text = 'Retapez votre mot de passe : ')
+Label6.grid(column=0, row=5, sticky='w',pady=2)
+MDP2= StringVar()
+Champ6 = Entry(fenetre, textvariable= MDP2,width=31)
+Champ6.focus_set()
+Champ6.grid(column=1, row=5,columnspan=2)
+ 
+ 
+Label7 = Label(fenetre, text = 'Commentaires : ')
+Label7.grid(column=0,row=6, sticky='w',pady=2)
+Commentaires= StringVar()
+Champ7 = Entry(fenetre, textvariable= Commentaires,width=31)
+Champ7.focus_set()
+Champ7.grid(column=1, row=6, ipady=25,columnspan=2)
+ 
+ 
+Label8 = Label(fenetre, text = 'Sexe : ')
+Label8.grid(column=0,row=7, sticky='w',pady=2)
+sexe=StringVar()
+homme= Radiobutton (fenetre, text="homme", variable=sexe, value=1)
+homme.focus_set()
+homme.grid(column=1, row=7,sticky='sw')
+femme= Radiobutton (fenetre, text="femme", variable=sexe, value=2)
+femme.focus_set()
+femme.grid(column=2, row=7,sticky='sw')
+ 
+ 
+ 
+Label9 = Label(fenetre, text = 'Hobbies : ')
+Label9.grid(column=0,row=9, sticky='w',pady=2)
+ 
+ 
+CheckVar1= IntVar()
+CheckVar2= IntVar()
+CheckVar3= IntVar()
+CheckVar4= IntVar()
+CheckVar5= IntVar()
+CheckVar6= IntVar()
+ 
+C1= Checkbutton (text="Cinema", variable=CheckVar1, onvalue=1, offvalue=0)
+C1.grid (column=1, row=8,sticky='sw')
+ 
+C2= Checkbutton (text="Equitation", variable=CheckVar2, onvalue=1, offvalue=0)
+C2.grid (column=1, row=9, sticky='sw')
+ 
+C3= Checkbutton (text="Planche à voile", variable=CheckVar3, onvalue=1, offvalue=0)
+C3.grid (column=1, row=10, sticky='sw')
+ 
+C4= Checkbutton (text="Musique", variable=CheckVar4, onvalue=1, offvalue=0)
+C4.grid (column=2, row=8,sticky='sw')
+ 
+C5= Checkbutton (text="Theatre", variable=CheckVar5, onvalue=1, offvalue=0)
+C5.grid (column=2, row=9, sticky='sw')
+ 
+C6= Checkbutton (text="Rien", variable=CheckVar6, onvalue=1, offvalue=0)
+C6.grid (column=2, row=10, sticky='sw')
+ 
+ 
+ 
+bouton1= Button (fenetre, text="envoyer", pady=2)
+bouton1.grid (column=1, row=11,sticky='sw', pady=20)
+bouton2= Button (fenetre, text="réeinitialiser", command=effacer, pady=2)
+bouton2.grid (column=2, row=11,sticky='sw',pady=20)
+ 
+ 
+fichier.close()             
+fenetre.mainloop()
