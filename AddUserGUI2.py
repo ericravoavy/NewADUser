@@ -114,7 +114,6 @@ class Fenetre(tk.Tk):
         print("le fichier contient : \n", type_output)
         # print(self.newuser.nom, self.newuser.prenom)
 
-
 class Utilisateur:
     """Classe utilisateur qui aura en paramètre d'entrée deux variables name et firstname :
 
