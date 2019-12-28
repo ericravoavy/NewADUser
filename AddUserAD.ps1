@@ -89,39 +89,4 @@ $New_User = Userclass -name $name -first_name $given_name -last_name $last_name 
 #display the new User created
 echo $New_User
 
-#connecting to the active directory with the service account
-
-#$Password = ConvertTo-SecureString "Password" -AsPlainText -Force
-#$cred = New-Object System.Management.Automation.PSCredential ("silver-holdings.lan\svc_create_user", $Password)
-#Enter-PSSession –ComputerName VWSERVDCSH.silver-holdings.lan –Credential $cred
-
-#connexion to the Active directory and create users
-New-ADUser -Name $New_User.name -GivenName $New_User.first_name -Surname $New_User.last_name -SamAccountName $samaccountname -UserPrincipalName $login -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-#New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-
-#verifier qu'il n'existe pas de user déjà crée avec le $New_
-
-#if (@(Get-ADUser -Filter { SamAccountName -eq $New_User.login }).Count -eq 0) {
-#    Write-Warning -Message "User does not exist"
-#    New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-#    }
-#else#
-#    {
-#    Write-Warning -Message "User exist"
-#    }
-
-
-#-SearchBase $New_User.OUPath
-
-#if($TestUser.SamAccountName -eq $null){
-#    echo "User n'existe pas"
-    #Creating the user to the Active Directory
-    #New-ADUser -Name $New_User.first_name -GivenName $New_User.first_name -Surname $New_User.lastname  -Department $New_User.departement -Description $New_User.function -OfficePhone $New_User.Tel_number -SamAccountName $New_User.login -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
-#}
-#Else
-#{
-#    echo "User existe déjà"
-#}
-
-
-#verifier qu'il n'existe pas de user déjà crée avec le $New_
+New-ADUser -Name $New_User.name -GivenName $New_User.first_name -Surname $New_User.last_name -SamAccountName $samaccountname -UserPrincipalName $login -OfficePhone $New_User.Tel_number -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
