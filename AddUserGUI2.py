@@ -2,7 +2,7 @@ import tkinter as tk
 import os
 
 
-class Fenetre(tk.Tk):
+class Interface(tk.Tk):
     def __init__(self):
         """La class Fenetre permet de créer une interface graphique des saisie des informations.
          ses attributs sont composés de champs suivants :
@@ -16,7 +16,7 @@ class Fenetre(tk.Tk):
         self.file = 'AddUserAD.ps1 '  # valeur du fichier que va recevoir la commande
         self.param = '-ExecutionPolicy Unrestricted'
         self.argument = ''
-        self.ch_dir = "C:/P6-OC-Project/NewADUser"
+        self.ch_dir = "C:\OC\P6"
         self.commande = self.cmd + self.file + self.argument + self.param
 
         # newuser - Instantiation de la classe Utilisateur
@@ -69,11 +69,11 @@ class Fenetre(tk.Tk):
         self.btn.grid(column=1, row=11, sticky='sw', pady=20)
 
         # Définition du bouton afficher :
-        # self.btn_ecrire = tk.Button(self, text='Ecrire', pady='2', command=self.ecrirefichier)
-        # qui va avoir comme fonction d'afficher ceux qui ont été saisies en appélant la methode modify
-        # self.btn_ecrire.grid(column=3, row=11, sticky='sw', pady=20)
-        # self.btn_cmd = tk.Button(self, text='lire fichier', pady='2', command=self.lirefichier)
-        # self.btn_cmd.grid(column=2, row=11, sticky='sw', pady=20)
+        self.btn_ajouter = tk.Button(self, text='Ajouter', pady='2', command=self.ecrirefichier)
+        # qui va avoir comme fonction d'ajouter ceux qui ont été saisies en appélant la methode modify
+        self.btn_ajouter.grid(column=3, row=11, sticky='sw', pady=20)
+        self.btn_lire = tk.Button(self, text='lire fichier', pady='2', command=self.lirefichier)
+        self.btn_lire.grid(column=2, row=11, sticky='sw', pady=20)
         print("Class is defined")
 
     def ecrirefichier(self):
@@ -104,8 +104,8 @@ class Fenetre(tk.Tk):
                         + '-given_name ' + '"' + self.newuser.prenom + '" ' \
                         + '-last_name ' + '"' + self.newuser.nom + '" ' \
                         + '-samaccountname ' + '"' + self.newuser.login + '" ' \
-                        +'-login ' + '"' + self.newuser.login + "@silver-holdings.lan" +  '" ' \
-                        + '-Tel_Number ' + '"' + self.newuser.tel_number +'" ' \
+                        + '-login ' + '"' + self.newuser.login + "@silver-holdings.lan" + '" ' \
+                        + '-Tel_Number ' + '"' + self.newuser.tel_number + '" ' \
                         + '-mail_address ' + '"' + self.newuser.email_address + '" '
         print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
         self.commande = self.cmd + self.file + self.argument + self.param
@@ -113,6 +113,7 @@ class Fenetre(tk.Tk):
         type_output = type_execute.read()
         print("le fichier contient : \n", type_output)
         # print(self.newuser.nom, self.newuser.prenom)
+
 
 class Utilisateur:
     """Classe utilisateur qui aura en paramètre d'entrée deux variables name et firstname :
@@ -148,3 +149,8 @@ class Utilisateur:
 
     def set_email_address(self, email_address):
         self.email_address = email_address
+
+
+if __name__ == "__main__":
+    window = Interface()
+    window.mainloop()
