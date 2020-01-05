@@ -40,6 +40,9 @@ class Interface(tk.Tk):
         # methode pour ecrire l'entête du fichier csv
         self.csv_init()
 
+        # self.affiche_canvas = tk.Canvas(self, width=10, height=100)
+        # self.affiche_canvas.grid(column=5, row=0)
+
         # ------Definition du champs "Nom"-------- #
         # définition du widget Label avec affichage "nom" et le positionnement
         self.lastnamelabel = tk.Label(self, text='Nom')
@@ -100,6 +103,7 @@ class Interface(tk.Tk):
 
         self.btn_read = tk.Button(self, text='Lire', pady='2', command=self.lire)
         self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)
+        self.lire()
         print("Class is defined")
 
     def csv_init(self):
@@ -137,6 +141,7 @@ class Interface(tk.Tk):
             self.telnum.delete(0, tk.END)
             self.mobile.delete(0, tk.END)
             self.email.delete(0, tk.END)
+            self.row = 0
             Interface.update(self)
 
     def joinfile(self):
@@ -151,7 +156,6 @@ class Interface(tk.Tk):
         """ Cette methode permet d'afficher les utilisateurs en file d'attente à partir d'un fichier csv """
         self.read_label.destroy()
         print("nous sommes dans le repertoire", os.getcwd(), "pour lire le contenu du fichier", self.csvfile)
-        self.row = 0
         with open(self.csvfile, newline='') as csv_file:
             print(csv_file)
             self.csv_read = csv.reader(csv_file)
