@@ -3,7 +3,6 @@ import os
 from tkinter import filedialog
 import csv
 
-
 class Interface(tk.Tk):
     def __init__(self):
         """La class Fenetre permet de créer une interface graphique des saisie des informations.
@@ -31,6 +30,7 @@ class Interface(tk.Tk):
         self.csv_read = ''  # Constructor du variable lecture csv
         self.csv_header = ''  # Constructeur pour l'ecriture en tête fichier csv
         self.csv_writer = ''  # Constructeur pour l'ecriture de fichier
+        self.read = ''
 
         # newuser - Instantiation de la classe Utilisateur
         self.newuser = Utilisateur()
@@ -135,9 +135,9 @@ class Interface(tk.Tk):
             # 'lastname': self.newuser.nom, 'office':'', 'password':self.password})
             userdatas.write(
                 self.newuser.prenom + ";" + self.newuser.nom + ";" +
-                self.newuser.prenom+ '.'+ self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' + self.newuser.nom +
-                ";" + self.newuser.tel_number + ";" + self.newuser.mobile_number + ";" + "IT" + ";" +
-                self.newuser.email_address + '\n')
+                self.newuser.prenom + '.' + self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' +
+                self.newuser.nom + ";" + self.newuser.tel_number + ";"
+                + self.newuser.mobile_number + ";" + "IT" + ";" + self.newuser.email_address + '\n')
             # userdatas.close()
             self.lastname.delete(0, tk.END)
             self.givenname.delete(0, tk.END)
@@ -191,13 +191,10 @@ class Interface(tk.Tk):
         self.read_label.grid(column=5, row=self.row, sticky='w')
         # print("resultat de la creation : \n", type_output)
 
-    def close(self):
-        return True
-
     def csv_init(self):
         self.csv_header = ''
         with open(self.csvfile, 'w', newline='') as csvfile:
-            self.csv_header = ['firstname', 'lastname','login' ,'job_title', 'samaccountname',
+            self.csv_header = ['firstname', 'lastname', 'login', 'job_title', 'samaccountname',
                                'tel_number', 'mobile_number', 'departement', 'email']
             self.csv_writer = csv.writer(csvfile, delimiter=';')
             self.csv_writer.writerow(self.csv_header)
