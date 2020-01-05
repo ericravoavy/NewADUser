@@ -57,14 +57,6 @@ class Interface(tk.Tk):
         self.givenname = tk.Entry(self, textvariable=self.givennamefield)  # Définition du champs de saisie du "prénom"
         self.givenname.grid(column=1, row=1, columnspan=2)  # Positionnement du widget dans la fenêtre racine
 
-        # Login
-        # self.loginlabel = tk.Label(self, text="login")  # Définition du widget Label avec comme affichage "prénom"
-        # self.loginlabel.grid(column=0, row=2, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
-
-        # self.loginfield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        # self.loginname = tk.Entry(self, textvariable=self.loginfield)  # Définition du champs de saisie du "prénom"
-        # self.loginname.grid(column=1, row=2, columnspan=2)  # Positionnement du widget dans la fenêtre racine
-
         # Tel number
         self.telnumlabel = tk.Label(self, text="Téléphone")  # Définition du widget Label avec comme affichage "prénom"
         self.telnumlabel.grid(column=0, row=3, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
