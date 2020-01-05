@@ -32,6 +32,7 @@ class Interface(tk.Tk):
         self.csv_header = ''  # Constructeur pour l'ecriture en tête fichier csv
         self.csv_writer = ''  # Constructeur pour l'ecriture de fichier
         self.read = ''
+        self.read_label = tk.Label(self, text='')
 
         # newuser - Instantiation de la classe Utilisateur
         self.newuser = Utilisateur()
@@ -101,16 +102,23 @@ class Interface(tk.Tk):
         self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)
         print("Class is defined")
 
-    def csvread(self):
-        with open(self.csvfile, newline='') as csvfile:
-            self.read = csv.reader(csvfile)
-            for row in self.read:
-                print(row)
+    def csv_init(self):
+        """ Methode pour initialiser le fichier csv avec les entête de colonne """
+        self.csv_header = ''
+        with open(self.csvfile, 'w', newline='') as csvfile:
+            self.csv_header = ['firstname', 'lastname', 'login', 'job_title', 'samaccountname',
+                               'tel_number', 'mobile_number', 'departement', 'email']
+            self.csv_writer = csv.writer(csvfile, delimiter=';')
+            self.csv_writer.writerow(self.csv_header)
 
     def csvreset(self):
+        """ permet de réinitialise la variable csfil qui sera le fichier csv par défaut """
         self.csvfile = 'import.csv'
 
     def ecrirefichier(self):
+        """ Cette methode permet d'ajouter les utilisateurs saisient dans le formulaire dans un fichier
+        csv import.csv
+        """
         print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
         with open(self.csvfile, 'a') as userdatas:
             self.newuser.set_nom(self.lastname.get())
@@ -119,14 +127,11 @@ class Interface(tk.Tk):
             self.newuser.set_mobile_number(self.mobile.get())
             self.newuser.set_email_address(self.email.get())
             self.newuser.set_email_address(self.email.get())
-            # self.csv_writerow = csvwriterow self.csv_writerow.writelines({'firstname': self.newuser.prenom,
-            # 'lastname': self.newuser.nom, 'office':'', 'password':self.password})
             userdatas.write(
                 self.newuser.prenom + ";" + self.newuser.nom + ";" +
                 self.newuser.prenom + '.' + self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' +
                 self.newuser.nom + ";" + self.newuser.tel_number + ";"
                 + self.newuser.mobile_number + ";" + "IT" + ";" + self.newuser.email_address + '\n')
-            # userdatas.close()
             self.lastname.delete(0, tk.END)
             self.givenname.delete(0, tk.END)
             self.telnum.delete(0, tk.END)
@@ -135,37 +140,29 @@ class Interface(tk.Tk):
             Interface.update(self)
 
     def joinfile(self):
+        """ Cette methode permet de recupérer les informations user
+         à partir d'un fichier csv et d'ajouter les dans l'AD """
         self.argument = filedialog.askopenfilename(initialdir="/", title="Select file",
                                                    filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
         self.csvfile = self.argument
-        # self.read_label.config(text="")
         self.lire()
-        self.csvreset()
-        # print("le fichier contient : \n", type_output)
 
     def lire(self):
+        """ Cette methode permet d'afficher les utilisateurs en file d'attente à partir d'un fichier csv """
         self.read_label.destroy()
         print("nous sommes dans le repertoire", os.getcwd(), "pour lire le contenu du fichier", self.csvfile)
         self.row = 0
-        # self.read_label.grid(column=5, row=self.row, sticky='w')
         with open(self.csvfile, newline='') as csv_file:
             print(csv_file)
-            # self.lecture = file.read()
-            # print(self.lecture)
-            # for self.line in file.readlines():
-            # self.read_label.configure(text=self.line)
-            # self.read_label["text"] = self.line
             self.csv_read = csv.reader(csv_file)
             for row in self.csv_read:
                 self.read_label = tk.Label(self, text=row)
                 self.read_label.grid(column=5, row=self.row, sticky='w')
-                # self.read_label.config(text=self.line)
                 self.row += 1
-        # Interface.update(self)
 
     def envoyer(self):
         """ Cette fonction permet d'exécuter la fonction de creation user
-         à partir du fichier par defaut """
+         à partir du fichier csv """
 
         os.chdir(self.current_dir)
         self.argument = self.csvfile
@@ -173,19 +170,9 @@ class Interface(tk.Tk):
         type_execute = os.popen(self.command)
         type_output = type_execute.read()
         self.row = 0
-        # self.output = StringVar()
         print("resultat de la creation : \n")
         self.read_label = tk.Label(self, text=type_output)
         self.read_label.grid(column=5, row=self.row, sticky='w')
-        # print("resultat de la creation : \n", type_output)
-
-    def csv_init(self):
-        self.csv_header = ''
-        with open(self.csvfile, 'w', newline='') as csvfile:
-            self.csv_header = ['firstname', 'lastname', 'login', 'job_title', 'samaccountname',
-                               'tel_number', 'mobile_number', 'departement', 'email']
-            self.csv_writer = csv.writer(csvfile, delimiter=';')
-            self.csv_writer.writerow(self.csv_header)
 
 
 class Utilisateur:
