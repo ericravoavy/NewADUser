@@ -1,5 +1,7 @@
 import tkinter as tk
 import os
+from tkinter import filedialog
+import csv
 
 
 class Interface(tk.Tk):
@@ -7,20 +9,34 @@ class Interface(tk.Tk):
         """La class Fenetre permet de créer une interface graphique des saisie des informations.
          ses attributs sont composés de champs suivants :
 
-        - Nom : champs de saisie
-        - Prénom : champs de saisie
+        - Nom :
+        - Prénom :
+         - Fonction :
+        - Email Adresse :
+        - Password
+        - Telephone number
+        - Mobile Number
+        - Member of :
         """
         super().__init__()  # Initialisation de la fenêtre racine
-
         self.cmd = 'powershell -file '  # definition de la commande à executer dans l'OS
-        self.file = 'AddUserAD.ps1 '  # valeur du fichier que va recevoir la commande
-        self.param = '-ExecutionPolicy Unrestricted'
-        self.argument = ''
-        self.ch_dir = "C:\OC\P6"
-        self.commande = self.cmd + self.file + self.argument + self.param
+        self.ps_file = 'AddUserAD.ps1 '  # fichier du script powershell
+        self.csvfile = 'import.csv'  # fichier csv à mettre en paramêtre du script powershell
+        self.writer = ""  # Constructeur de l'ecriture du fichier csv
+        self.param = '-ExecutionPolicy Unrestricted'  # Force l'execution du script Powershell
+        self.argument = ''  # Constructeur de l'argument pour le script powershell
+        self.current_dir = os.getcwd()  # connnaitre le repertoire actuel
+        self.command = self.cmd + self.ps_file + self.argument + self.param
+        self.row = 0  # Constructeur du variable pour parcourir le fichier csv
+        self.csv_read = ''  # Constructor du variable lecture csv
+        self.csv_header = ''  # Constructeur pour l'ecriture en tête fichier csv
+        self.csv_writer = ''  # Constructeur pour l'ecriture de fichier
 
         # newuser - Instantiation de la classe Utilisateur
         self.newuser = Utilisateur()
+
+        # methode pour ecrire l'entête du fichier csv
+        self.csv_init()
 
         # ------Definition du champs "Nom"-------- #
         # définition du widget Label avec affichage "nom" et le positionnement
@@ -41,12 +57,12 @@ class Interface(tk.Tk):
         self.givenname.grid(column=1, row=1, columnspan=2)  # Positionnement du widget dans la fenêtre racine
 
         # Login
-        self.loginlabel = tk.Label(self, text="login")  # Définition du widget Label avec comme affichage "prénom"
-        self.loginlabel.grid(column=0, row=2, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        # self.loginlabel = tk.Label(self, text="login")  # Définition du widget Label avec comme affichage "prénom"
+        # self.loginlabel.grid(column=0, row=2, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
 
-        self.loginfield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.loginname = tk.Entry(self, textvariable=self.loginfield)  # Définition du champs de saisie du "prénom"
-        self.loginname.grid(column=1, row=2, columnspan=2)  # Positionnement du widget dans la fenêtre racine
+        # self.loginfield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
+        # self.loginname = tk.Entry(self, textvariable=self.loginfield)  # Définition du champs de saisie du "prénom"
+        # self.loginname.grid(column=1, row=2, columnspan=2)  # Positionnement du widget dans la fenêtre racine
 
         # Tel number
         self.telnumlabel = tk.Label(self, text="Téléphone")  # Définition du widget Label avec comme affichage "prénom"
@@ -55,64 +71,136 @@ class Interface(tk.Tk):
         self.telnumfield = tk.IntVar()  # Définir le type de ce variable comme étant une chaîne de caractère
         self.telnum = tk.Entry(self, textvariable=self.telnumfield)  # Définition du champs de saisie du "prénom"
         self.telnum.grid(column=1, row=3, columnspan=2)  # Positionnement du widget dans la fenêtre racine#Prénom
+        self.telnum.delete(0, tk.END)
 
+        # mobile
+        self.mobilephone_label = tk.Label(self,
+                                          text="Mobile")  # Définition du widget Label avec comme affichage "prénom"
+        self.mobilephone_label.grid(column=0, row=4, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+
+        self.mobilephone_field = tk.IntVar()  # Définir le type de ce variable comme étant une chaîne de caractère
+        self.mobile = tk.Entry(self, textvariable=self.mobilephone_field)  # Définition du champs de saisie du "prénom"
+        self.mobile.grid(column=1, row=4, columnspan=2)  # Positionnement du widget dans la fenêtre racine
+        self.mobile.delete(0, tk.END)
         # mail address
         self.email_label = tk.Label(self, text="Email")  # Définition du widget Label avec comme affichage "prénom"
-        self.email_label.grid(column=0, row=4, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        self.email_label.grid(column=0, row=5, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
 
         self.email_field = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
         self.email = tk.Entry(self, textvariable=self.email_field)  # Définition du champs de saisie du "prénom"
-        self.email.grid(column=1, row=4, columnspan=2)  # Positionnement du widget dans la fenêtre racine
+        self.email.grid(column=1, row=5, columnspan=2)  # Positionnement du widget dans la fenêtre racine
 
-        self.btn = tk.Button(self, text='Envoyer', pady='2', command=self.envoyer)  # Définition du bouton afficher
+        # ------------------- Button section--------------------------- #
+        self.btn_send = tk.Button(self, text='Envoyer', pady='2',
+                                  command=self.envoyer)  # Définition du bouton afficher
         # qui va avoir comme fonction d'afficher ceux qui ont été saisies en appélant la methode modify
-        self.btn.grid(column=1, row=11, sticky='sw', pady=20)
+        self.btn_send.grid(column=1, row=11, sticky='sw', pady=20)
+
+        self.btn_join = tk.Button(self, text='joindre fichier', pady='2', command=self.joinfile)
+        self.btn_join.grid(column=2, row=11, sticky='sw', pady=20)
 
         # Définition du bouton afficher :
-        self.btn_ajouter = tk.Button(self, text='Ajouter', pady='2', command=self.ecrirefichier)
+        self.btn_add = tk.Button(self, text='Ajouter', pady='2', command=self.ecrirefichier)
         # qui va avoir comme fonction d'ajouter ceux qui ont été saisies en appélant la methode modify
-        self.btn_ajouter.grid(column=3, row=11, sticky='sw', pady=20)
-        self.btn_lire = tk.Button(self, text='lire fichier', pady='2', command=self.lirefichier)
-        self.btn_lire.grid(column=2, row=11, sticky='sw', pady=20)
+        self.btn_add.grid(column=3, row=11, sticky='sw', pady=20)
+
+        self.btn_read = tk.Button(self, text='Lire', pady='2', command=self.lire)
+        self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)
+
+        self.read_label = tk.Label(self, text="utilisateur 25")
+        self.row = 5
+        self.read_label.grid(column=5, row=self.row, sticky='w')
+
         print("Class is defined")
+
+    def csvread(self):
+        with open(self.csvfile, newline='') as csvfile:
+            self.read = csv.reader(csvfile)
+            for row in self.read:
+                print(row)
+
+    def csvreset(self):
+        self.csvfile = 'import.csv'
 
     def ecrirefichier(self):
         print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
-        with open(self.file, self.write) as fichier:
-            nom = self.newuser.nom
-            prenom = self.newuser.prenom
-            fichier.write(nom)
-            fichier.write("\n")
-            fichier.write(prenom)
+        with open(self.csvfile, 'a') as userdatas:
+            self.newuser.set_nom(self.lastname.get())
+            self.newuser.set_prenom(self.givenname.get())
+            self.newuser.set_tel_number(self.telnum.get())
+            self.newuser.set_mobile_number(self.mobile.get())
+            self.newuser.set_email_address(self.email.get())
+            self.newuser.set_email_address(self.email.get())
+            # self.csv_writerow = csvwriterow self.csv_writerow.writelines({'firstname': self.newuser.prenom,
+            # 'lastname': self.newuser.nom, 'office':'', 'password':self.password})
+            userdatas.write(
+                self.newuser.prenom + ";" + self.newuser.nom + ";" +
+                self.newuser.prenom+ '.'+ self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' + self.newuser.nom +
+                ";" + self.newuser.tel_number + ";" + self.newuser.mobile_number + ";" + "IT" + ";" +
+                self.newuser.email_address + '\n')
+            # userdatas.close()
+            self.lastname.delete(0, tk.END)
+            self.givenname.delete(0, tk.END)
+            self.telnum.delete(0, tk.END)
+            self.mobile.delete(0, tk.END)
+            self.email.delete(0, tk.END)
+            Interface.update(self)
 
-    def lirefichier(self):
-        os.chdir(self.change_dir)
-        self.commande = self.cmd
-        type_execute = os.popen(self.commande)
-        type_output = type_execute.read()
-        print("le fichier contient : \n", type_output)
+    def joinfile(self):
+        self.argument = filedialog.askopenfilename(initialdir="/", title="Select file",
+                                                   filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+        self.csvfile = self.argument
+        # self.read_label.config(text="")
+        self.lire()
+        self.csvreset()
+        # print("le fichier contient : \n", type_output)
+
+    def lire(self):
+        self.read_label.destroy()
+        print("nous sommes dans le repertoire", os.getcwd(), "pour lire le contenu du fichier", self.csvfile)
+        self.row = 0
+        # self.read_label.grid(column=5, row=self.row, sticky='w')
+        with open(self.csvfile, newline='') as csv_file:
+            print(csv_file)
+            # self.lecture = file.read()
+            # print(self.lecture)
+            # for self.line in file.readlines():
+            # self.read_label.configure(text=self.line)
+            # self.read_label["text"] = self.line
+            self.csv_read = csv.reader(csv_file)
+            for row in self.csv_read:
+                self.read_label = tk.Label(self, text=row)
+                self.read_label.grid(column=5, row=self.row, sticky='w')
+                # self.read_label.config(text=self.line)
+                self.row += 1
+        # Interface.update(self)
 
     def envoyer(self):
-        """Cette fonction permet d'afficher les informations entré dans le formulaire"""
-        os.chdir(self.ch_dir)
-        self.newuser.set_nom(self.lastname.get())
-        self.newuser.set_prenom(self.givenname.get())
-        self.newuser.set_login(self.loginname.get())
-        self.newuser.set_tel_number(self.telnum.get())
-        self.newuser.set_email_address(self.email.get())
-        self.argument = '-name ' + '"' + self.newuser.prenom + ' ' + self.newuser.nom + '" ' \
-                        + '-given_name ' + '"' + self.newuser.prenom + '" ' \
-                        + '-last_name ' + '"' + self.newuser.nom + '" ' \
-                        + '-samaccountname ' + '"' + self.newuser.login + '" ' \
-                        + '-login ' + '"' + self.newuser.login + "@silver-holdings.lan" + '" ' \
-                        + '-Tel_Number ' + '"' + self.newuser.tel_number + '" ' \
-                        + '-mail_address ' + '"' + self.newuser.email_address + '" '
-        print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
-        self.commande = self.cmd + self.file + self.argument + self.param
-        type_execute = os.popen(self.commande)
+        """ Cette fonction permet d'exécuter la fonction de creation user
+         à partir du fichier par defaut """
+
+        os.chdir(self.current_dir)
+        self.argument = self.csvfile
+        self.command = self.cmd + self.ps_file + self.argument
+        type_execute = os.popen(self.command)
         type_output = type_execute.read()
-        print("le fichier contient : \n", type_output)
-        # print(self.newuser.nom, self.newuser.prenom)
+        self.row = 0
+        # self.output = StringVar()
+        print("resultat de la creation : \n")
+        self.read_label = tk.Label(self, text=type_output)
+        self.read_label.grid(column=5, row=self.row, sticky='w')
+        # print("resultat de la creation : \n", type_output)
+
+    def close(self):
+        return True
+
+    def csv_init(self):
+        self.csv_header = ''
+        with open(self.csvfile, 'w', newline='') as csvfile:
+            self.csv_header = ['firstname', 'lastname','login' ,'job_title', 'samaccountname',
+                               'tel_number', 'mobile_number', 'departement', 'email']
+            self.csv_writer = csv.writer(csvfile, delimiter=';')
+            self.csv_writer.writerow(self.csv_header)
 
 
 class Utilisateur:
@@ -126,7 +214,10 @@ class Utilisateur:
         self.nom = ""  # attributs name
         self.prenom = ""  # attributs prenom
         self.login = ""
+        self.fonction = ""
         self.tel_number = ""
+        self.mobile_number = ""
+        self.password = "Welcome.2020"
         self.email_address = ""
 
     def get_nom(self):
@@ -146,6 +237,9 @@ class Utilisateur:
 
     def set_tel_number(self, tel_number):
         self.tel_number = tel_number
+
+    def set_mobile_number(self, mobile_number):
+        self.mobile_number = mobile_number
 
     def set_email_address(self, email_address):
         self.email_address = email_address

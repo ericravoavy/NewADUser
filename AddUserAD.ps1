@@ -11,16 +11,11 @@
 #Import-PSSession -Session $session -module ActiveDirectory
 
 param(
-    $name,
-    $given_name,
-    $last_name,
-    $samaccountname,
-    $login,
-    $Tel_Number,
-    $mail_address
-    #$departement,
-    #$function
-    )
+    $csvpath
+)
+
+$users = Import-Csv -Delimiter ";" -Path $csvpath
+
 #describe the properties of Userclass object
 $Userclass = New-Object psobject -Property @{
     name = $null
@@ -31,7 +26,7 @@ $Userclass = New-Object psobject -Property @{
     Tel_number = $null
     mail_address = $null
     departement = $null
-    function = $null
+    job_title = $null
     OUPath = $null
     Enable = $null
 }
@@ -59,14 +54,14 @@ function Userclass {
         [String]$departement,
         [Parameter(Mandatory=$false)]
         #[ValidateSet('IT','Accountant','VP','AVP')]
-        [string]$function,
+        [string]$job_title,
         [Parameter(Mandatory=$false)]
         [string]$OUPath,
         [Parameter(Mandatory=$false)]
         [string]$Enable
     )
     $Userclass = $Userclass.psobject.copy()
-    $Userclass.name = $name
+    $Userclass.name = $first_name+ " " + $name
     $Userclass.first_name = $first_name
     $Userclass.last_name = $last_name
     $Userclass.samaccountname = $samaccountname
@@ -74,19 +69,43 @@ function Userclass {
     $Userclass.Tel_number = $Tel_number
     $Userclass.mail_address = $mail_address
     $Userclass.departement = $departement
-    $Userclass.function = $Function
+    $Userclass.job_title = $job_title
     $userclass.OUPath = $OUPath
     $userclass.Enable = $Enable
     $Userclass
 }
 
-echo "la class userclass définissant un utilisateur de l'AD est défini"
+# echo "la class userclass définissant un utilisateur de l'AD est défini"
 
 
 #Initiate an user from class Userclass
-$New_User = Userclass -name $name -first_name $given_name -last_name $last_name -samaccountname $samaccountname -login $login -Tel_number $Tel_Number -mail_address $mail_address -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
+# $New_User = Userclass -name $ -first_name $given_name -last_name $last_name -samaccountname $samaccountname -login $login -Tel_number $Tel_Number -mail_address $mail_address -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
 
 #display the new User created
-echo $New_User
 
-New-ADUser -Name $New_User.name -GivenName $New_User.first_name -Surname $New_User.last_name -SamAccountName $samaccountname -UserPrincipalName $login -OfficePhone $New_User.Tel_number -EmailAddress $New_User.mail_address -Path $New_User.OUPath -AccountPassword (ConvertTo-SecureString "Welcome.2019" -AsPlainText -force) -PassThru -Enabled $true
+foreach($user in $users)
+{
+    $name = $user.firstname + " " + $user.lastname
+    $fname = $user.firstname
+    $lname = $user.lastname
+    $login = $user.firstname + "." + $user.lastname
+    $officephone = $user.tel_number
+    $mobilephone = $user.mobile_number
+    $job_title = $user.job_title
+    $dept = $user.departement
+    $email = $email
+    $Upassword = "Welcome.2020"
+    $OUPath = "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan"
+
+    try {
+            New-ADUser -Name $name -Surname $lname -GivenName $fname -Path $OUPath -SamAccountName $login `
+            -UserPrincipalName $login -DisplayName $name -OfficePhone $officephone `
+            -MobilePhone $mobilephone -Title $job_title `
+            -AccountPassword (ConvertTo-SecureString $Upassword -AsPlainText -Force) `
+            -Department $dept -Enable $true `
+            -ChangePasswordAtLogon $true
+            Write-Output "User Added : $name login : $login"
+    }catch{
+        Write-Output "Erreur : l'utilisateur $name n'a pas pu être ajouter"
+        }
+}
