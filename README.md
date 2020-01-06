@@ -1,4 +1,4 @@
-# Outils d'automatisation de création d'utilisateurs dans l'Active Directory
+# Outil d'automatisation de création d'utilisateurs dans l'Active Directory
 
 ## Benefices du code :
 
