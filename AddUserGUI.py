@@ -2,6 +2,11 @@ import tkinter as tk
 import os
 from tkinter import filedialog
 import csv
+# TODO : Factoriser les codes répétitifs
+# TODO : Préparer la livraison du code
+# TODO : Mettre un titre sur la fenêtre
+# TODO : Bugs d'affichage des resultats sur la fenêtre de droite
+
 
 
 class Interface(tk.Tk):
@@ -19,6 +24,7 @@ class Interface(tk.Tk):
         - Member of :
         """
         super().__init__()  # Initialisation de la fenêtre racine
+        self.title('Creation Compte AD')
         self.cmd = 'powershell -file '  # definition de la commande à executer dans l'OS
         self.ps_file = 'AddUserAD.ps1 '  # fichier du script powershell
         self.csvfile = 'import.csv'  # fichier csv à mettre en paramêtre du script powershell
@@ -51,7 +57,7 @@ class Interface(tk.Tk):
         # Definition du champs de saisie "Nom"
         self.lastnamefield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
         self.lastname = tk.Entry(self, textvariable=self.lastnamefield)  # Définition du champs de saisie
-        self.lastname.grid(column=1, row=0, sticky='e', columnspan=2, padx=10)  # Mise en place du champs de saisie
+        self.lastname.grid(column=1, row=0, columnspan=2)  # Mise en place du champs de saisie
 
         # Prénom
         self.givennamelabel = tk.Label(self, text="Prénom")  # Définition du widget Label avec comme affichage "prénom"
@@ -69,6 +75,7 @@ class Interface(tk.Tk):
         self.telnum = tk.Entry(self, textvariable=self.telnumfield)  # Définition du champs de saisie du "prénom"
         self.telnum.grid(column=1, row=3, columnspan=2)  # Positionnement du widget dans la fenêtre racine#Prénom
         self.telnum.delete(0, tk.END)
+        # TODO : factoriser le code
 
         # mobile
         self.mobilephone_label = tk.Label(self,
@@ -88,20 +95,20 @@ class Interface(tk.Tk):
         self.email.grid(column=1, row=5, columnspan=2)  # Positionnement du widget dans la fenêtre racine
 
         # ------------------- Button section--------------------------- #
-        self.btn_send = tk.Button(self, text='Envoyer', pady='2',
+        self.btn_send = tk.Button(self, text='Créer les comptes', pady='2',
                                   command=self.envoyer)  # Définition du bouton afficher
         # qui va avoir comme fonction d'afficher ceux qui ont été saisies en appélant la methode modify
         self.btn_send.grid(column=1, row=11, sticky='sw', pady=20)
 
-        self.btn_join = tk.Button(self, text='joindre fichier', pady='2', command=self.joinfile)
+        self.btn_join = tk.Button(self, text='joindre fichier csv', pady='2', command=self.joinfile)
         self.btn_join.grid(column=2, row=11, sticky='sw', pady=20)
 
         # Définition du bouton afficher :
-        self.btn_add = tk.Button(self, text='Ajouter', pady='2', command=self.ecrirefichier)
+        self.btn_add = tk.Button(self, text='Ajouter utilisateur', pady='2', command=self.ecrirefichier)
         # qui va avoir comme fonction d'ajouter ceux qui ont été saisies en appélant la methode modify
         self.btn_add.grid(column=3, row=11, sticky='sw', pady=20)
 
-        self.btn_read = tk.Button(self, text='Lire', pady='2', command=self.lire)
+        self.btn_read = tk.Button(self, text='Afficher', pady='2', command=self.lire)
         self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)
         self.lire()
         print("Class is defined")

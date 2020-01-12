@@ -104,8 +104,9 @@ foreach($user in $users)
             -AccountPassword (ConvertTo-SecureString $Upassword -AsPlainText -Force) `
             -Department $dept -Enable $true `
             -ChangePasswordAtLogon $true
-            Write-Output "User Added : $name login : $login"
+            Write-Output "Users below has been added in AD :"
+            Write-Output "User Added : $name login : $login Phone number : $officephone email = $email "
     }catch{
-        Write-Output "Erreur : l'utilisateur $name n'a pas pu être ajouter"
+        Write-Output "Error : User $name has not been added"
         }
 }
