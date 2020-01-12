@@ -1,6 +1,6 @@
 # Contibution pour AdduserADGUI
 
-Dans un premier temps merci d'avance pour votre temps pour contribuer à ce projet
+Dans un premier temps merci d'avance pour votre temps afin de contribuer à ce projet
 
 Les instructions suivantes seront une ligne de conduites pour maintenir ce projet lisible et propre. 
 Si vous voulez contribué à l'amélioration de ce document, vous pouvez adresser un pull Request si nécéssaire.
