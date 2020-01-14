@@ -2,18 +2,13 @@ import tkinter as tk
 import os
 from tkinter import filedialog
 import csv
-# TODO : Factoriser les codes répétitifs
-# TODO : Préparer la livraison du code
-# TODO : Mettre un titre sur la fenêtre
-# TODO : Bugs d'affichage des resultats sur la fenêtre de droite
-
 
 
 class Interface(tk.Tk):
     def __init__(self):
         """La class Fenetre permet de créer une interface graphique des saisie des informations.
-         ses attributs sont composés de champs suivants :
 
+         ses attributs sont composés de champs suivants :
         - Nom :
         - Prénom :
          - Fonction :
@@ -22,8 +17,11 @@ class Interface(tk.Tk):
         - Telephone number
         - Mobile Number
         - Member of :
+
         """
         super().__init__()  # Initialisation de la fenêtre racine
+        self.val_label = ""
+        self.val_entry = ""
         self.title('Creation Compte AD')
         self.cmd = 'powershell -file '  # definition de la commande à executer dans l'OS
         self.ps_file = 'AddUserAD.ps1 '  # fichier du script powershell
@@ -39,6 +37,9 @@ class Interface(tk.Tk):
         self.csv_writer = ''  # Constructeur pour l'ecriture de fichier
         self.read = ''
         self.read_label = tk.Label(self, text='')
+        self.position = ""
+        self.val_command = ""
+        self.val_button = ""
 
         # newuser - Instantiation de la classe Utilisateur
         self.newuser = Utilisateur()
@@ -46,56 +47,38 @@ class Interface(tk.Tk):
         # methode pour ecrire l'entête du fichier csv
         self.csv_init()
 
-        # self.affiche_canvas = tk.Canvas(self, width=10, height=100)
-        # self.affiche_canvas.grid(column=5, row=0)
+        # ------Definition du formulaire-------- #
+        # définition des widgets Label et champs de saisie avec positionnement
+        self.form2("lastname", "lastname_entry", "Nom", '0')
 
-        # ------Definition du champs "Nom"-------- #
-        # définition du widget Label avec affichage "nom" et le positionnement
-        self.lastnamelabel = tk.Label(self, text='Nom')
-        self.lastnamelabel.grid(column=0, row=0, sticky='w')
+        self.form2("givenname", "givenname_entry", "Prénom", '1')
 
-        # Definition du champs de saisie "Nom"
-        self.lastnamefield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.lastname = tk.Entry(self, textvariable=self.lastnamefield)  # Définition du champs de saisie
-        self.lastname.grid(column=1, row=0, columnspan=2)  # Mise en place du champs de saisie
+        self.form2("telnum", "telnum_entry", "Téléphone", '2')
 
-        # Prénom
-        self.givennamelabel = tk.Label(self, text="Prénom")  # Définition du widget Label avec comme affichage "prénom"
-        self.givennamelabel.grid(column=0, row=1, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        self.form2("mobilephone", "mobilephone_entry", "Mobile", '3')
 
-        self.givennamefield = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.givenname = tk.Entry(self, textvariable=self.givennamefield)  # Définition du champs de saisie du "prénom"
-        self.givenname.grid(column=1, row=1, columnspan=2)  # Positionnement du widget dans la fenêtre racine
+        self.form2("email", "email_entry", "email", '4')
 
-        # Tel number
-        self.telnumlabel = tk.Label(self, text="Téléphone")  # Définition du widget Label avec comme affichage "prénom"
-        self.telnumlabel.grid(column=0, row=3, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        """self.form("lastname", "Nom", '0')
 
-        self.telnumfield = tk.IntVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.telnum = tk.Entry(self, textvariable=self.telnumfield)  # Définition du champs de saisie du "prénom"
-        self.telnum.grid(column=1, row=3, columnspan=2)  # Positionnement du widget dans la fenêtre racine#Prénom
-        self.telnum.delete(0, tk.END)
-        # TODO : factoriser le code
+        self.form("givenname", "Prénom", '1')
 
-        # mobile
-        self.mobilephone_label = tk.Label(self,
-                                          text="Mobile")  # Définition du widget Label avec comme affichage "prénom"
-        self.mobilephone_label.grid(column=0, row=4, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        self.form("telnum", "Téléphone", '2')
 
-        self.mobilephone_field = tk.IntVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.mobile = tk.Entry(self, textvariable=self.mobilephone_field)  # Définition du champs de saisie du "prénom"
-        self.mobile.grid(column=1, row=4, columnspan=2)  # Positionnement du widget dans la fenêtre racine
-        self.mobile.delete(0, tk.END)
-        # mail address
-        self.email_label = tk.Label(self, text="Email")  # Définition du widget Label avec comme affichage "prénom"
-        self.email_label.grid(column=0, row=5, sticky='w', pady='2')  # Positionnement du widget dans la fenêtre
+        self.form("mobilephone", "Mobile", '3')
 
-        self.email_field = tk.StringVar()  # Définir le type de ce variable comme étant une chaîne de caractère
-        self.email = tk.Entry(self, textvariable=self.email_field)  # Définition du champs de saisie du "prénom"
-        self.email.grid(column=1, row=5, columnspan=2)  # Positionnement du widget dans la fenêtre racine
-
+        self.form("email", "email", '4')
+        """
         # ------------------- Button section--------------------------- #
-        self.btn_send = tk.Button(self, text='Créer les comptes', pady='2',
+        self.button("btn_create", "Créer les comptes", self.envoyer, 1)
+
+        self.button("btn_join", "Joindre un fichier", self.joinfile, 2)
+
+        self.button("btn_add", "ajouter utilisateur", self.ecrirefichier, 3)
+
+        self.button("btn_read", "Afficher", self.lire, 4)
+
+        """self.btn_send = tk.Button(self, text='Créer les comptes', pady='2',
                                   command=self.envoyer)  # Définition du bouton afficher
         # qui va avoir comme fonction d'afficher ceux qui ont été saisies en appélant la methode modify
         self.btn_send.grid(column=1, row=11, sticky='sw', pady=20)
@@ -109,9 +92,43 @@ class Interface(tk.Tk):
         self.btn_add.grid(column=3, row=11, sticky='sw', pady=20)
 
         self.btn_read = tk.Button(self, text='Afficher', pady='2', command=self.lire)
-        self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)
+        self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)"""
+
         self.lire()
-        print("Class is defined")
+
+    def form2(self, label, entry, text, position):
+        """Methode pour créer le formulaire de saisie"""
+        self.val_label = label + "label"
+        self.val_entry = entry
+        # self.position = str(position)
+
+        self.val_label = tk.Label(self, text=text)
+        self.val_label.grid(column=0, sticky='w', row=position)
+
+        self.val_entry = tk.StringVar()
+        self.val_entry = tk.Entry(self, textvariable=self.val_entry)
+        self.val_entry.grid(column=1, row=position, columnspan=2, pady=position)
+
+    """def form(self, label, text, position):
+        Methode pour créer le formulaire de saisie
+        self.val_label = label + "label"
+        self.val_entry = label
+        # self.position = str(position)
+
+        self.val_label = tk.Label(self, text=text)
+        self.val_label.grid(column=0, sticky='w', row=position)
+
+        self.val_entry = tk.StringVar()
+        self.val_entry = tk.Entry(self, textvariable=self.val_entry)
+        self.val_entry.grid(column=1, row=position, columnspan=2, pady=position)"""
+
+    def button(self, button, text, function, position):
+        # self.val_command = "self." + function
+        self.val_button = button
+
+        self.val_button = tk.Button(self, text=text, pady='2', command=function)
+        self.val_button.grid(column=position, row='11', sticky='sw', pady=20)
+
 
     def csv_init(self):
         """ Methode pour initialiser le fichier csv avec les entête de colonne """
@@ -123,7 +140,7 @@ class Interface(tk.Tk):
             self.csv_writer.writerow(self.csv_header)
 
     def csvreset(self):
-        """ permet de réinitialise la variable csfil qui sera le fichier csv par défaut """
+        """ permet de réinitialise la variable csvfile qui sera le fichier csv par défaut """
         self.csvfile = 'import.csv'
 
     def ecrirefichier(self):
@@ -132,22 +149,22 @@ class Interface(tk.Tk):
         """
         print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
         with open(self.csvfile, 'a') as userdatas:
-            self.newuser.set_nom(self.lastname.get())
+            self.newuser.set_nom(self.
             self.newuser.set_prenom(self.givenname.get())
-            self.newuser.set_tel_number(self.telnum.get())
-            self.newuser.set_mobile_number(self.mobile.get())
-            self.newuser.set_email_address(self.email.get())
-            self.newuser.set_email_address(self.email.get())
+            self.newuser.set_tel_number(self.val_entry.get())
+            self.newuser.set_mobile_number(self.val_entry.get())
+            self.newuser.set_email_address(self.val_entry.get())
+            self.newuser.set_email_address(self.val_entry.get())
             userdatas.write(
                 self.newuser.prenom + ";" + self.newuser.nom + ";" +
                 self.newuser.prenom + '.' + self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' +
                 self.newuser.nom + ";" + self.newuser.tel_number + ";"
                 + self.newuser.mobile_number + ";" + "IT" + ";" + self.newuser.email_address + '\n')
-            self.lastname.delete(0, tk.END)
-            self.givenname.delete(0, tk.END)
-            self.telnum.delete(0, tk.END)
-            self.mobile.delete(0, tk.END)
-            self.email.delete(0, tk.END)
+            self.val_entry.delete(0, tk.END)
+            self.val_entry.delete(0, tk.END)
+            self.val_entry.delete(0, tk.END)
+            self.val_entry.delete(0, tk.END)
+            self.val_entry.delete(0, tk.END)
             self.row = 0
             Interface.update(self)
 
@@ -193,6 +210,7 @@ class Utilisateur:
     - attribut firstname
     """
 
+    # Définition de la classe
     def __init__(self):
         self.nom = ""  # attributs name
         self.prenom = ""  # attributs prenom
