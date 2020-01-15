@@ -1,22 +1,14 @@
 ﻿#Creating PSobject model with information properties of a new employee.
 #These informations should be provided by HR departement
 
-#Import all the command module fo managing active directory
-#ConnectAD.ps1
-#Connect to your Domain Controller(DC)
-#Change the value after the -ComputerName to your know DC
-
-#$session = New-PSSession -ComputerName "VWSERVDCSH" -Credential (Get-Credential)
-#Invoke-Command $session -Scriptblock { Import-Module ActiveDirectory }
-#Import-PSSession -Session $session -module ActiveDirectory
-
 param(
     $csvpath
 )
 
+# affecter les valeurs des attributs du fichier csv dans la variable users
 $users = Import-Csv -Delimiter ";" -Path $csvpath
 
-#describe the properties of Userclass object
+# Description de la class user
 $Userclass = New-Object psobject -Property @{
     name = $null
     first_name = $null
@@ -31,8 +23,8 @@ $Userclass = New-Object psobject -Property @{
     Enable = $null
 }
 
-#Contructor of userclass class
-#define the mandatory information parameters of the object
+# Contructor of userclass class
+# define the mandatory information parameters of the object
 function Userclass {
     param(
         [Parameter(Mandatory=$true)]
@@ -75,14 +67,7 @@ function Userclass {
     $Userclass
 }
 
-# echo "la class userclass définissant un utilisateur de l'AD est défini"
-
-
-#Initiate an user from class Userclass
-# $New_User = Userclass -name $ -first_name $given_name -last_name $last_name -samaccountname $samaccountname -login $login -Tel_number $Tel_Number -mail_address $mail_address -OUPath "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan" -Enable "$true"
-
-#display the new User created
-
+# affectation de chaque attribut de chaques ligne du csv dans le variable user
 foreach($user in $users)
 {
     $name = $user.firstname + " " + $user.lastname
@@ -97,6 +82,7 @@ foreach($user in $users)
     $Upassword = "Welcome.2020"
     $OUPath = "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan"
 
+    # Fonction de creation de compte dans l'Active Directory avec une condition de réussite ou echec
     try {
             New-ADUser -Name $name -Surname $lname -GivenName $fname -Path $OUPath -SamAccountName $login `
             -UserPrincipalName $login -DisplayName $name -OfficePhone $officephone `
@@ -104,8 +90,9 @@ foreach($user in $users)
             -AccountPassword (ConvertTo-SecureString $Upassword -AsPlainText -Force) `
             -Department $dept -Enable $true `
             -ChangePasswordAtLogon $true
-            Write-Output "User Added : $name login : $login"
+            Write-Output "Users below has been added in AD :"
+            Write-Output "User Added : $name login : $login Phone number : $officephone email = $email "
     }catch{
-        Write-Output "Erreur : l'utilisateur $name n'a pas pu être ajouter"
+        Write-Output "Error : User $name has not been added"
         }
 }
