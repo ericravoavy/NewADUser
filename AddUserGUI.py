@@ -40,6 +40,13 @@ class Interface(tk.Tk):
         self.position = ""
         self.val_command = ""
         self.val_button = ""
+        self.lastname_entry = tk.Entry(self)
+        self.givenname_entry = tk.Entry(self)
+        self.telnum_entry = tk.Entry(self)
+        self.mobilephone_entry = tk.Entry(self)
+        self.email_entry = tk.Entry(self)
+
+
 
         # newuser - Instantiation de la classe Utilisateur
         self.newuser = Utilisateur()
@@ -49,26 +56,16 @@ class Interface(tk.Tk):
 
         # ------Definition du formulaire-------- #
         # définition des widgets Label et champs de saisie avec positionnement
-        self.form2("lastname", "lastname_entry", "Nom", '0')
+        self.form("lastname", self.lastname_entry, "Nom", '0')
 
-        self.form2("givenname", "givenname_entry", "Prénom", '1')
+        self.form("givenname", self.givenname_entry, "Prénom", '1')
 
-        self.form2("telnum", "telnum_entry", "Téléphone", '2')
+        self.form("telnum", self.telnum_entry, "Téléphone", '2')
 
-        self.form2("mobilephone", "mobilephone_entry", "Mobile", '3')
+        self.form("mobilephone", self.mobilephone_entry, "Mobile", '3')
 
-        self.form2("email", "email_entry", "email", '4')
+        self.form("email", self.email_entry, "email", '4')
 
-        """self.form("lastname", "Nom", '0')
-
-        self.form("givenname", "Prénom", '1')
-
-        self.form("telnum", "Téléphone", '2')
-
-        self.form("mobilephone", "Mobile", '3')
-
-        self.form("email", "email", '4')
-        """
         # ------------------- Button section--------------------------- #
         self.button("btn_create", "Créer les comptes", self.envoyer, 1)
 
@@ -78,49 +75,13 @@ class Interface(tk.Tk):
 
         self.button("btn_read", "Afficher", self.lire, 4)
 
-        """self.btn_send = tk.Button(self, text='Créer les comptes', pady='2',
-                                  command=self.envoyer)  # Définition du bouton afficher
-        # qui va avoir comme fonction d'afficher ceux qui ont été saisies en appélant la methode modify
-        self.btn_send.grid(column=1, row=11, sticky='sw', pady=20)
-
-        self.btn_join = tk.Button(self, text='joindre fichier csv', pady='2', command=self.joinfile)
-        self.btn_join.grid(column=2, row=11, sticky='sw', pady=20)
-
-        # Définition du bouton afficher :
-        self.btn_add = tk.Button(self, text='Ajouter utilisateur', pady='2', command=self.ecrirefichier)
-        # qui va avoir comme fonction d'ajouter ceux qui ont été saisies en appélant la methode modify
-        self.btn_add.grid(column=3, row=11, sticky='sw', pady=20)
-
-        self.btn_read = tk.Button(self, text='Afficher', pady='2', command=self.lire)
-        self.btn_read.grid(column=4, row=11, sticky='sw', pady=20, padx=10)"""
-
-        self.lire()
-
-    def form2(self, label, entry, text, position):
+    def form(self, label, entry, text, position):
         """Methode pour créer le formulaire de saisie"""
         self.val_label = label + "label"
-        self.val_entry = entry
-        # self.position = str(position)
-
+        val_entry = entry
         self.val_label = tk.Label(self, text=text)
         self.val_label.grid(column=0, sticky='w', row=position)
-
-        self.val_entry = tk.StringVar()
-        self.val_entry = tk.Entry(self, textvariable=self.val_entry)
-        self.val_entry.grid(column=1, row=position, columnspan=2, pady=position)
-
-    """def form(self, label, text, position):
-        Methode pour créer le formulaire de saisie
-        self.val_label = label + "label"
-        self.val_entry = label
-        # self.position = str(position)
-
-        self.val_label = tk.Label(self, text=text)
-        self.val_label.grid(column=0, sticky='w', row=position)
-
-        self.val_entry = tk.StringVar()
-        self.val_entry = tk.Entry(self, textvariable=self.val_entry)
-        self.val_entry.grid(column=1, row=position, columnspan=2, pady=position)"""
+        val_entry.grid(column=1, row=position, columnspan=2, pady=position)
 
     def button(self, button, text, function, position):
         # self.val_command = "self." + function
@@ -149,22 +110,21 @@ class Interface(tk.Tk):
         """
         print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
         with open(self.csvfile, 'a') as userdatas:
-            self.newuser.set_nom(self.
-            self.newuser.set_prenom(self.givenname.get())
-            self.newuser.set_tel_number(self.val_entry.get())
-            self.newuser.set_mobile_number(self.val_entry.get())
-            self.newuser.set_email_address(self.val_entry.get())
-            self.newuser.set_email_address(self.val_entry.get())
+            self.newuser.set_nom(self.lastname_entry.get())
+            self.newuser.set_prenom(self.givenname_entry.get())
+            self.newuser.set_tel_number(self.telnum_entry.get())
+            self.newuser.set_mobile_number(self.mobilephone_entry.get())
+            self.newuser.set_email_address(self.email_entry.get())
             userdatas.write(
                 self.newuser.prenom + ";" + self.newuser.nom + ";" +
                 self.newuser.prenom + '.' + self.newuser.nom + ";" + 'VP' + ";" + self.newuser.prenom + '.' +
                 self.newuser.nom + ";" + self.newuser.tel_number + ";"
                 + self.newuser.mobile_number + ";" + "IT" + ";" + self.newuser.email_address + '\n')
-            self.val_entry.delete(0, tk.END)
-            self.val_entry.delete(0, tk.END)
-            self.val_entry.delete(0, tk.END)
-            self.val_entry.delete(0, tk.END)
-            self.val_entry.delete(0, tk.END)
+            self.lastname_entry.delete(0, tk.END)
+            self.givenname_entry.delete(0, tk.END)
+            self.telnum_entry.delete(0, tk.END)
+            self.mobilephone_entry.delete(0, tk.END)
+            self.email_entry.delete(0, tk.END)
             self.row = 0
             Interface.update(self)
 
