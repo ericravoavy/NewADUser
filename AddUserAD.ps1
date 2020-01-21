@@ -86,7 +86,7 @@ foreach($user in $users)
     try {
             New-ADUser -Name $name -Surname $lname -GivenName $fname -Path $OUPath -SamAccountName $login `
             -UserPrincipalName $login -DisplayName $name -OfficePhone $officephone `
-            -MobilePhone $mobilephone -Title $job_title `
+            -MobilePhone $mobilephone -Title $job_title -EmailAddress $email `
             -AccountPassword (ConvertTo-SecureString $Upassword -AsPlainText -Force) `
             -Department $dept -Enable $true `
             -ChangePasswordAtLogon $true
