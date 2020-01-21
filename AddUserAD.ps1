@@ -78,7 +78,7 @@ foreach($user in $users)
     $mobilephone = $user.mobile_number
     $job_title = $user.job_title
     $dept = $user.departement
-    $email = $email.email
+    $email = $user.email
     $Upassword = "Welcome.2020"
     $OUPath = "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan"
 
@@ -91,7 +91,7 @@ foreach($user in $users)
             -Department $dept -Enable $true `
             -ChangePasswordAtLogon $true
             Write-Output "Users below has been added in AD :"
-            Write-Output "User Added : $name login : $login Phone number : $officephone email = $email "
+            Write-Output "User Added : $name login : $login email = $email Phone number : $officephone  "
     }catch{
         Write-Output "Error : User $name has not been added"
         }
