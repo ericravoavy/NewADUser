@@ -78,7 +78,7 @@ foreach($user in $users)
     $mobilephone = $user.mobile_number
     $job_title = $user.job_title
     $dept = $user.departement
-    $email = $email
+    $email = $email.email
     $Upassword = "Welcome.2020"
     $OUPath = "OU=Laptop Users,OU=Users,OU=SH,DC=silver-holdings,DC=lan"
 
