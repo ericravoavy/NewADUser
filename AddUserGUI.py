@@ -96,7 +96,7 @@ class Interface(tk.Tk):
         self.csv_header = ''
         with open(self.csvfile, 'w', newline='') as csvfile:
             self.csv_header = ['firstname', 'lastname', 'login', 'job_title', 'samaccountname',
-                               'tel_number', 'mobile_number', 'departement', 'email']
+                               'tel_number', 'mobile_number', 'department', 'email']
             self.csv_writer = csv.writer(csvfile, delimiter=';')
             self.csv_writer.writerow(self.csv_header)
 
@@ -108,7 +108,7 @@ class Interface(tk.Tk):
         """ Cette methode permet d'ajouter les utilisateurs saisient dans le formulaire dans un fichier
         csv import.csv
         """
-        print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
+        ## print("nous sommes dans le repertoire pour ecrire dans le fichier", os.getcwd())
         with open(self.csvfile, 'a') as userdatas:
             self.newuser.set_nom(self.lastname_entry.get())
             self.newuser.set_prenom(self.givenname_entry.get())
@@ -139,7 +139,7 @@ class Interface(tk.Tk):
     def lire(self):
         """ Cette methode permet d'afficher les utilisateurs en file d'attente à partir d'un fichier csv """
         self.read_label.destroy()
-        print("nous sommes dans le repertoire", os.getcwd(), "pour lire le contenu du fichier", self.csvfile)
+        # print("nous sommes dans le repertoire", os.getcwd(), "pour lire le contenu du fichier", self.csvfile)
         with open(self.csvfile, newline='') as csv_file:
             print(csv_file)
             self.csv_read = csv.reader(csv_file)
