@@ -2,9 +2,9 @@
 
 Dans un premier temps merci d'avance pour votre temps afin de contribuer à l'amélioration de ce projet
 
-Les instructions suivantes seront une ligne de conduites pour maintenir ce projet lisible et propre.
+Les instructions suivantes seront une ligne de conduite pour maintenir ce projet lisible et propre.
 
-Si vous voulez contribué à l'amélioration de ce document, vous pouvez adresser un pull Request si nécéssaire.
+Si vous voulez contribuer à l'amélioration de ce document, vous pouvez adresser un pull Request si nécéssaire.
 
 Sachant que c'est l'ecriture de mon premier code, je serai ouvert à toutes les propositions d'amélioration du projet de manière globale.
 
@@ -26,13 +26,13 @@ ce qui nécessite à chaque fois de réecrire le code pour chaque paramêtre uti
 
 L'objectif de ce projet est donc d'avoir une interface graphique ecrite en python 3.x.x qui permet de saisir les informations des utilisateurs.
 
-Puis de passer ces paramètre à un script powershell afin de créer le compte de l'utilisateur dans l'Active Directory.
+Puis de passer ces paramètres à un script powershell afin de créer le compte de l'utilisateur dans l'Active Directory.
 
 ## Pré-requis
 
 - Nécessite Windows 10 1803 ou supérieur
 - Nécessite l'installation de python 3.XXX ou supérieur
-- Nécessite l'execution de script powershell sous windows 10 en mode "Unrestriced"
+- Nécessite l'execution de script powershell sous windows 10 en mode "Unrestricted"
 - Nécessite des droits domain Admin sur le poste administrateur
 - Nécessite le module RSAT: Active Directory Domain Services and Lightweight Directory Tools
 
@@ -43,9 +43,9 @@ Pour contribuer au projet voici une liste de bonnes pratiques qu'il seraient jud
 - Créer la branche "develop" à partir de "Master"
 - créer une branche "feature-GUI" pour developper l'interface graphique en python
 - créer une branche "feature-CreateUserAD" pour developper le script de création de compte dans l'AD
-- Essayer d'utiliser des noms de fichier excplicite
+- Essayer d'utiliser des noms de fichier explicite
 
-faire un merge des branches finalisées dans la branche "develop" afin de fusionner les features.
+faire un merge des branches finalisées dans la branche "develop" afin de fusionner les fonctionnalités.
 
 Faire une push request afin de proposer la developpement du programme
 
