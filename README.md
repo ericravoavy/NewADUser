@@ -26,7 +26,7 @@ Restriction du programme à l'environnement WINDOWS dans un premier temps :
 
 Fichiers :
 
-- AddUserGUI.zip qui contient les fichiers nécéssaires à la bonne exécution du programme.
+- EXE Program.zip qui contient les fichiers nécéssaires à la bonne exécution du programme.
 
 Les deux fichiers suivants, ainsi que les librairies python suivant doivent être dans un même dossier pour fonctionner :
 - AddUserGUI.exe
