@@ -34,7 +34,7 @@ Les deux fichiers suivants, ainsi que les librairies python suivant doivent êtr
 
 ## Fonctionnement :
 
-- Télécharger le fichier ZIP AddUserGUI.zip
+- Télécharger le fichier ZIP EXE_program.zip
 - Décompresser le fichier
 - localiser le fichier AddUserGUI.exe
 
